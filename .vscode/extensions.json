@@ -1,0 +1,16 @@
+{
+    "recommendations": [
+        // Hot reloading local server
+        "ritwickdey.liveserver",
+        // Code formatter
+        "esbenp.prettier-vscode",
+        // JS ES6 coding helper
+        "xabikos.javascriptsnippets",
+        // Git status quick view tool
+        "eamodio.gitlens",
+        // Auto rename & closing html tags
+        "formulahendry.auto-complete-tag",
+        // setting config to editor
+        "editorconfig.editorconfig"
+    ]
+}
