@@ -1,0 +1,28 @@
+#submitBtn {
+    padding: 3.5px 15px; 
+    font-size: 20px;
+    transition: background-color 0.3s ease;
+    background-color: #28272c;
+    color: #FFFFFF;
+    margin-right: 10px;
+}
+
+#submitBtn:hover {
+    background-color: #008000;
+}
+
+.btn-sm {
+    transition: background-color 0.3s ease;
+    background-color: #28272c;
+    color: #FFFFFF;
+    margin-right: 10px;
+}
+
+.btn-sm:hover {
+    background-color: #008000;
+}
+
+.btn-dark:hover {
+    background-color: #FF0000;
+}
+
