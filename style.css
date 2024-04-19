@@ -1,9 +1,14 @@
+body {
+    background-color: #212529;
+    color: white; /* Changing text color to white for better readability */
+}
+
 #submitBtn {
-    padding: 3.5px 15px; 
+    padding: 3.5px 15px;
     font-size: 20px;
     transition: background-color 0.3s ease;
     background-color: #28272c;
-    color: #FFFFFF;
+    color: #ffffff;
     margin-right: 10px;
 }
 
@@ -11,18 +16,148 @@
     background-color: #008000;
 }
 
-.btn-sm {
-    transition: background-color 0.3s ease;
-    background-color: #28272c;
-    color: #FFFFFF;
-    margin-right: 10px;
+h2 {
+    color: #000;
 }
 
-.btn-sm:hover {
+/* Override Bootstrap background color */
+.bg-success {
+    background-color: orange !important;
+}
+
+/* Any other Bootstrap classes that set a background color */
+.card {
+    background-color: white !important; /* Dark background for cards */
+}
+
+.btn-delete {
+    background-color: #808080;
+    color: white;
+    margin-right: 5px;
+}
+
+.btn-delete:hover {
+    background-color: red;
+}
+
+.btn-done {
+    background-color: #808080;
+    color: white;
+}
+
+.btn-done:hover {
     background-color: #008000;
 }
 
-.btn-dark:hover {
-    background-color: #FF0000;
+.btn-undo {
+    background-color: #808080;
+    color: white;
 }
 
+.btn-undo:hover {
+    background-color: #008000;
+}
+
+.btn-primary {
+    display: relative;
+    margin-right: 10px;
+    margin-top: 5.5px;
+}
+
+.alert-custom {
+    background-color: #540d1f;
+    border-color: #d9534f !important; /* Change this value to your desired color */
+    border-style: solid !important; /* Specifies the style of the border */
+    border-width: 2.2px !important; /* Specifies the width of the border */
+    border-radius: 10px !important; /* Specifies the radius of the border */
+    color: #f5abb9;
+}
+
+.alert-custom .close {
+    color: #000;
+}
+
+.alert-custom .close:hover {
+    color: #ffffff;
+    opacity: 0.75;
+}
+
+.time-button {
+    margin-left: 10px; /* This will add space to the left of the button */
+}
+
+.form-and-legend-container {
+    display: flex;
+    justify-content: space-between; /* Aligns children to each side of the container */
+    align-items: center; /* Vertically centers the children */
+}
+
+.list-group-todo {
+    color: #000;
+    position: relative;
+    list-style-type: none;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #f2f2f2;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.list-group-todo:hover {
+    background-color: #f8f9fa; /* Light grey background on hover */
+    cursor: pointer; /* Changes the cursor to a pointer to indicate it's clickable */
+    transform: scale(
+        1.02
+    ); /* Optional: Slight increase in size to emphasize hover */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow for depth */
+}
+
+.list-group-todo .badge {
+    color: black; /* Sets the text color to black */
+    margin-top: 10px;
+}
+
+.legend-dots {
+    color: #000;
+    display: flex; /* Aligns the dots horizontally */
+    gap: 10px; /* Adds space between each dot */
+}
+
+.legend-dot {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Define specific colors for each type of badge within the legend */
+.legend-dot.created {
+    background-color: #fed000;
+}
+.legend-dot.updated {
+    background-color: #17a2b8;
+}
+.legend-dot.done {
+    background-color: #4caf50;
+}
+
+.badge {
+    font-size: 0.8em; /* Smaller text size for the badge */
+    margin-top: 4px;
+    margin-left: 10px; /* Space between the todo text and the time */
+}
+
+.create-time {
+    background-color: #fed000; /* Bright yellow background */
+}
+
+.done-time {
+    background-color: #03ac13; /* Green background */
+}
+
+/* Optional: Additional styling in your CSS file */
+.edit-container {
+    display: flex;
+    align-items: center; /* Center align items vertically */
+    width: 100%; /* Ensure the container takes full width of its parent */
+}
