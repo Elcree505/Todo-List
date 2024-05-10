@@ -551,3 +551,19 @@ function handleDrop(e) {
 
     return false;
 }
+
+
+/**
+ * TODO: resolve this part
+ */
+function createCategory() {
+    /**
+     * @type {import('./main.js').Category}
+     */
+    const newCategory = {
+        id: 0,
+        title: 'new category'
+    }
+
+    // TODO: what to do?
+}
