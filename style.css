@@ -3,6 +3,19 @@ body {
     color: white; /* Changing text color to white for better readability */
 }
 
+#unfinishedTodo.over,
+#finishedTodo.over {
+    background-color: #f0f0f0;
+}
+
+.modal-title {
+    color: #000;
+}
+
+.modal-body {
+    color: #000;
+}
+
 #submitBtn {
     padding: 3.5px 15px;
     font-size: 20px;
@@ -27,7 +40,7 @@ h2 {
 
 /* Any other Bootstrap classes that set a background color */
 .card {
-    background-color: white !important; /* Dark background for cards */
+    background-color: white; /* Dark background for cards */
 }
 
 .btn-delete {
@@ -66,10 +79,10 @@ h2 {
 
 .alert-custom {
     background-color: #540d1f;
-    border-color: #d9534f !important; /* Change this value to your desired color */
-    border-style: solid !important; /* Specifies the style of the border */
-    border-width: 2.2px !important; /* Specifies the width of the border */
-    border-radius: 10px !important; /* Specifies the radius of the border */
+    border-color: #d9534f;
+    border-style: solid;
+    border-width: 2.2px;
+    border-radius: 10px;
     color: #f5abb9;
 }
 
@@ -160,4 +173,12 @@ h2 {
     display: flex;
     align-items: center; /* Center align items vertically */
     width: 100%; /* Ensure the container takes full width of its parent */
+}
+
+:root {
+    --primary-color: #337ab7;
+    --success-color: #5cb85c;
+    --danger-color: #d9534f;
+    --info-color: #5bc0de;
+    --warning-color: #f0ad4e;
 }

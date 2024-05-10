@@ -7,6 +7,17 @@ const finishedList = document.getElementById("finishedTodo");
 const filter = document.getElementById("filter");
 const textInput = document.getElementById("todo");
 
+// Add dragging features
+const unfinishedListItems = unfinishedList.getElementsByTagName("li");
+for (let i = 0; i < unfinishedListItems.length; i++) {
+    unfinishedListItems[i].setAttribute("draggable", "true");
+}
+
+const finishedListItems = finishedList.getElementsByTagName("li");
+for (let i = 0; i < finishedListItems.length; i++) {
+    finishedListItems[i].setAttribute("draggable", "true");
+}
+
 // Boostraps alert
 const alertContainer = document.getElementById("alertContainer");
 
@@ -30,6 +41,17 @@ finishedList.addEventListener("click", editTodo);
 // Filter event
 filter.addEventListener("keyup", filterTodo);
 
+//Draggable event
+unfinishedList.addEventListener("dragstart", handleDragStart);
+unfinishedList.addEventListener("dragover", handleDragOver);
+unfinishedList.addEventListener("dragleave", handleDragLeave);
+unfinishedList.addEventListener("drop", handleDrop);
+
+finishedList.addEventListener("dragstart", handleDragStart);
+finishedList.addEventListener("dragover", handleDragOver);
+finishedList.addEventListener("dragleave", handleDragLeave);
+finishedList.addEventListener("drop", handleDrop);
+
 /**
  * Check if the Todo is empty or already exists
  * @param {string} newTodo - The new Todo to check
@@ -37,21 +59,23 @@ filter.addEventListener("keyup", filterTodo);
  */
 function checkTodo(newTodo) {
     // Check if the Todo is empty
-    if (newTodo.trim() === "") {
+    newTodo = newTodo.toLowerCase().trim();
+    if (newTodo === "") {
         createBootstrapAlert(alertContainer, "Todo cannot be empty", "custom");
         return false;
     }
 
     // Check if the Todo already exists
-    let checkUnfinished = Array.from(unfinishedList.getElementsByTagName("li"));
-    let checkFinished = Array.from(finishedList.getElementsByTagName("li"));
-    let checkAllTodos = checkUnfinished.concat(checkFinished);
+    const checkUnfinished = Array.from(
+        unfinishedList.getElementsByTagName("li")
+    );
+    const checkFinished = Array.from(finishedList.getElementsByTagName("li"));
+    const checkAllTodos = checkUnfinished.concat(checkFinished);
+
+    console.log(newTodo);
 
     for (let i = 0; i < checkAllTodos.length; i++) {
-        if (
-            checkAllTodos[i].firstChild.nodeValue.trim() ===
-            newTodo.toLowerCase()
-        ) {
+        if (checkAllTodos[i].firstChild.nodeValue === newTodo) {
             createBootstrapAlert(
                 alertContainer,
                 "Todo already exists",
@@ -88,7 +112,7 @@ function addTodo(e) {
     e.preventDefault();
 
     // Get input values
-    let newTodo = document.getElementById("todo").value;
+    const newTodo = document.getElementById("todo").value;
 
     // Check if the Todo is empty
     if (!checkTodo(newTodo)) {
@@ -96,26 +120,27 @@ function addTodo(e) {
         return;
     }
 
-    let li = document.createElement("li");
+    const li = document.createElement("li");
     li.className = "list-group-todo";
+    li.setAttribute("draggable", "true");
 
     // Add text node with input value
     li.appendChild(document.createTextNode(newTodo));
 
     // Create updated time span (initially not displayed)
-    let updatedTimeSpan = document.createElement("span");
+    const updatedTimeSpan = document.createElement("span");
     updatedTimeSpan.className = "badge badge-info updated-time";
     updatedTimeSpan.textContent = "N/A";
     li.appendChild(updatedTimeSpan);
 
     // Create creation time span
-    let createTimeSpan = document.createElement("span");
+    const createTimeSpan = document.createElement("span");
     createTimeSpan.className = "badge create-time";
     createTimeSpan.textContent = formatDateTime(new Date());
     li.appendChild(createTimeSpan);
 
     // create done time span (initially not displayed)
-    let doneTimeSpan = document.createElement("span");
+    const doneTimeSpan = document.createElement("span");
     doneTimeSpan.className = "badge done-time";
     doneTimeSpan.textContent = "N/A";
     li.appendChild(doneTimeSpan);
@@ -187,20 +212,20 @@ function editTodo(e) {
  */
 function createInlineEditInput(li, text) {
     // Create the container for input and button
-    let editContainer = document.createElement("div");
+    const editContainer = document.createElement("div");
     editContainer.style.display = "flex";
     editContainer.style.alignTodos = "center"; // Align Todos vertically
     editContainer.className = "edit-container"; // Add a class for the container
 
     // Create the input field
-    let input = document.createElement("input");
+    const input = document.createElement("input");
     input.type = "text";
     input.className = "form-control";
     input.style.flex = "1"; // Input takes up the remaining space
     input.value = text; // Set the current text as the input's value
 
     // Create the save button
-    let saveBtn = document.createElement("button");
+    const saveBtn = document.createElement("button");
     saveBtn.className = "btn btn-success btn-sm";
     saveBtn.textContent = "Save";
     saveBtn.style.marginLeft = "10px"; // Space between the input and the button
@@ -215,13 +240,13 @@ function createInlineEditInput(li, text) {
 
     // Event listener for the save button
     saveBtn.addEventListener("click", function () {
-        saveChanges(li, input.value.trim());
+        saveChanges(li, input.value, text);
     });
 
     // Optional: Handle the Enter key to save changes
-    input.addEventListener("keypress", function (e) {
+    saveBtn.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
-            saveChanges(li, input.value.trim());
+            saveChanges(li, input.value, text);
         }
     });
 }
@@ -231,12 +256,20 @@ function createInlineEditInput(li, text) {
  * @param {HTMLElement} li - The list Todo element that contains the todo Todo.
  * @param {string} newText - The new text to replace the existing todo Todo text.
  */
-function saveChanges(li, newText) {
-    let input = li.querySelector("input"); // Correct way to access the input inside the editContainer
-    let originalText = input.value; // This should store the original input value for comparison and fallback
+function saveChanges(li, newText, originalText) {
+    const input = li.querySelector("input"); // Correct way to access the input inside the editContainer
+    newText = input.value; // This should store the original input value for comparison and fallback
 
-    // Check if the newText is valid and different from the original input
-    if (newText && newText !== originalText && checkTodo(newText)) {
+    console.log("original text: ", originalText);
+    console.log("new text: ", newText);
+
+    if (newText && newText !== originalText && !checkTodo(newText)) {
+        // If not changed or input invalid, revert to old text
+        let textNode = document.createTextNode(originalText);
+        li.querySelector("div").replaceWith(textNode); // Replace the entire container
+
+        // Check if the newText is valid and different from the original input
+    } else {
         // Create new text node and replace the editContainer with it
         let textNode = document.createTextNode(newText);
         li.querySelector("div").replaceWith(textNode); // Replace the entire container
@@ -246,10 +279,6 @@ function saveChanges(li, newText) {
         if (updatedTimeSpan) {
             updatedTimeSpan.textContent = formatDateTime(new Date());
         }
-    } else {
-        // If not changed or input invalid, revert to old text
-        let textNode = document.createTextNode(originalText);
-        li.querySelector("div").replaceWith(textNode); // Replace the entire container
     }
 }
 
@@ -449,9 +478,9 @@ function createBootstrapAlert(container, message, type) {
     alertDiv.innerHTML = `
         ${message}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">&times;</span>
         </button>
-    `;
+      `;
 
     // Append the alert to the specified container
     container.appendChild(alertDiv);
@@ -460,4 +489,65 @@ function createBootstrapAlert(container, message, type) {
     alertDiv.querySelector(".close").addEventListener("click", function () {
         alertDiv.remove();
     });
+
+    // **Add this code to dismiss the alert after 5 seconds**
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+
+let draggedItem = null;
+
+function handleDragStart(e) {
+    draggedItem = e.target;
+    e.dataTransfer.effectAllowed = "move";
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+
+    e.dataTransfer.dropEffect = "move";
+    return false;
+}
+
+function handleDragLeave(e) {
+    if (e.target.tagName === "UL") {
+        e.target.classList.remove("over");
+    }
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+
+    if (draggedItem) {
+        const newParent = e.target.closest("ul");
+        const oldParent = draggedItem.parentElement;
+        const targetItem = e.target.closest("li");
+
+        if (targetItem) {
+            newParent.insertBefore(draggedItem, targetItem);
+        } else {
+            newParent.appendChild(draggedItem);
+        }
+
+        if (newParent !== oldParent) {
+            if (newParent.id === "unfinishedList") {
+                const doneTimeSpan = draggedItem.querySelector(".done-time");
+                doneTimeSpan.style.display = "none";
+            } else {
+                const updatedTimeSpan =
+                    draggedItem.querySelector(".updated-time");
+                updatedTimeSpan.textContent = formatDateTime(new Date());
+                updatedTimeSpan.style.display = "inline";
+            }
+        }
+
+        draggedItem = null;
+    }
+
+    return false;
 }
