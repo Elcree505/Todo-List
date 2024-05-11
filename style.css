@@ -1,3 +1,13 @@
+:root {
+    --primary-color: #337ab7;
+    --success-color: #5cb85c;
+    --danger-color: #d9534f;
+    --info-color: #5bc0de;
+    --warning-color: #f0ad4e;
+    --background-color: #212529;
+    --text-color: #ffffff;
+}
+
 body {
     background-color: #212529;
     color: white; /* Changing text color to white for better readability */
@@ -99,12 +109,6 @@ h2 {
     margin-left: 10px; /* This will add space to the left of the button */
 }
 
-.form-and-legend-container {
-    display: flex;
-    justify-content: space-between; /* Aligns children to each side of the container */
-    align-items: center; /* Vertically centers the children */
-}
-
 .list-group-todo {
     color: #000;
     position: relative;
@@ -128,6 +132,34 @@ h2 {
 .list-group-todo .badge {
     color: black; /* Sets the text color to black */
     margin-top: 10px;
+}
+
+.form-and-legend-container {
+    display: flex;
+    justify-content: space-between; /* Aligns children to each side of the container */
+    align-items: center; /* Vertically centers the children */
+}
+
+/* Media query for mobile devices (max-width: 768px) */
+@media only screen and (max-width: 768px) {
+    .form-and-legend-container {
+        flex-direction: column; /* Stack children vertically on mobile */
+        align-items: flex-start; /* Align children to the left on mobile */
+    }
+    /* Additional styles for mobile */
+    .form-grid {
+        gap: 0.5em;
+    }
+    label {
+        font-size: 1.05em;
+    }
+    input[type="checkbox"] {
+        width: 1.625rem;
+        height: 1.625rem;
+    }
+    button[type="button"] {
+        min-height: 3rem;
+    }
 }
 
 .legend-dots {
@@ -173,12 +205,4 @@ h2 {
     display: flex;
     align-items: center; /* Center align items vertically */
     width: 100%; /* Ensure the container takes full width of its parent */
-}
-
-:root {
-    --primary-color: #337ab7;
-    --success-color: #5cb85c;
-    --danger-color: #d9534f;
-    --info-color: #5bc0de;
-    --warning-color: #f0ad4e;
 }

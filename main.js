@@ -105,6 +105,34 @@ function countTodo() {
 }
 
 /**
+ * Formats a date object into a string with the format MM/DD/YY HH:mm.
+ * @param {Date} date - The date object to format.
+ * @returns {string} The formatted date and time string.
+ */
+function formatDateTime(date) {
+    // Format the date and time to MM/DD/YY HH:mm
+    let day = String(date.getDate()).padStart(2, "0");
+    let month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+    let year = String(date.getFullYear()).slice(-2); // Get the last two digits of the year
+    let hours = String(date.getHours()).padStart(2, "0");
+    let minutes = String(date.getMinutes()).padStart(2, "0");
+    return month + "/" + day + "/" + year + " " + hours + ":" + minutes;
+}
+
+/**
+ * Creates a timestamp span with given specifications.
+ * @param {string} className - The class name for the span.
+ * @param {string} initialText - Initial text content for the span.
+ * @returns {HTMLElement} - A configured span element.
+ */
+function createTimestampSpan(className, initialText = "N/A") {
+    const span = document.createElement("span");
+    span.className = `badge ${className}`;
+    span.textContent = initialText;
+    return span;
+}
+
+/**
  * Add a new Todo to the unfinished list
  * @param {Event} e - The event object
  */
@@ -128,21 +156,18 @@ function addTodo(e) {
     li.appendChild(document.createTextNode(newTodo));
 
     // Create updated time span (initially not displayed)
-    const updatedTimeSpan = document.createElement("span");
-    updatedTimeSpan.className = "badge badge-info updated-time";
-    updatedTimeSpan.textContent = "N/A";
+    const updatedTimeSpan = createTimestampSpan("badge-info updated-time");
     li.appendChild(updatedTimeSpan);
 
     // Create creation time span
-    const createTimeSpan = document.createElement("span");
-    createTimeSpan.className = "badge create-time";
-    createTimeSpan.textContent = formatDateTime(new Date());
+    const createTimeSpan = createTimestampSpan(
+        "badge create-time",
+        formatDateTime(new Date())
+    );
     li.appendChild(createTimeSpan);
 
     // create done time span (initially not displayed)
-    const doneTimeSpan = document.createElement("span");
-    doneTimeSpan.className = "badge done-time";
-    doneTimeSpan.textContent = "N/A";
+    const doneTimeSpan = createTimestampSpan("badge done-time");
     li.appendChild(doneTimeSpan);
 
     // Create finish buttons
@@ -441,20 +466,6 @@ function filterTodo(e) {
         }
     });
 }
-/**
- * Formats a date object into a string with the format MM/DD/YY HH:mm.
- * @param {Date} date - The date object to format.
- * @returns {string} The formatted date and time string.
- */
-function formatDateTime(date) {
-    // Format the date and time to MM/DD/YY HH:mm
-    let day = String(date.getDate()).padStart(2, "0");
-    let month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
-    let year = String(date.getFullYear()).slice(-2); // Get the last two digits of the year
-    let hours = String(date.getHours()).padStart(2, "0");
-    let minutes = String(date.getMinutes()).padStart(2, "0");
-    return month + "/" + day + "/" + year + " " + hours + ":" + minutes;
-}
 
 /**
  * Creates a Bootstrap alert dynamically and appends it to a specified container
@@ -552,7 +563,6 @@ function handleDrop(e) {
     return false;
 }
 
-
 /**
  * TODO: resolve this part
  */
@@ -562,8 +572,8 @@ function createCategory() {
      */
     const newCategory = {
         id: 0,
-        title: 'new category'
-    }
+        title: "new category",
+    };
 
     // TODO: what to do?
 }
