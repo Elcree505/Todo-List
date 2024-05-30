@@ -140,28 +140,6 @@ h2 {
     align-items: center; /* Vertically centers the children */
 }
 
-/* Media query for mobile devices (max-width: 768px) */
-@media only screen and (max-width: 768px) {
-    .form-and-legend-container {
-        flex-direction: column; /* Stack children vertically on mobile */
-        align-items: flex-start; /* Align children to the left on mobile */
-    }
-    /* Additional styles for mobile */
-    .form-grid {
-        gap: 0.5em;
-    }
-    label {
-        font-size: 1.05em;
-    }
-    input[type="checkbox"] {
-        width: 1.625rem;
-        height: 1.625rem;
-    }
-    button[type="button"] {
-        min-height: 3rem;
-    }
-}
-
 .legend-dots {
     color: #000;
     display: flex; /* Aligns the dots horizontally */
@@ -205,4 +183,56 @@ h2 {
     display: flex;
     align-items: center; /* Center align items vertically */
     width: 100%; /* Ensure the container takes full width of its parent */
+}
+
+@media only screen and (max-width: 768px) {
+    h2 {
+        font-size: 24px;
+    }
+
+    #submitBtn {
+        padding: 8px 20px; /* Larger button for easier interaction */
+        font-size: 15px;
+        transition: background-color 0.3s ease;
+        background-color: #28272c;
+        color: #ffffff;
+        margin-right: 10px;
+    }
+
+    #submitBtn:hover {
+        background-color: #008000;
+    }
+
+    .form-inline .form-control {
+        display: inline-block;
+        width: auto;
+        vertical-align: middle;
+    }
+
+    .alert-custom {
+        background-color: #752022; /* Darken for contrast */
+    }
+
+    .list-group-todo {
+        padding: 1rem; /* Increase padding for touch targets */
+    }
+
+    .form-and-legend-container {
+        flex-direction: column; /* Stack form elements vertically */
+        align-items: stretch; /* Stretch to take full width */
+    }
+
+    .legend-dots {
+        color: #000;
+        font-size: 12px;
+        display: flex; /* Aligns the dots horizontally */
+        gap: 10px; /* Adds space between each dot */
+    }
+
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+    }
 }

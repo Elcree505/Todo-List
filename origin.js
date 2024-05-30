@@ -1,64 +1,3 @@
-// Classes
-/**
- * @type {import('./main.js').Todo[]}
- */
-class classTodo {
-    #title;
-    #finished;
-    #createTime;
-    #updateTime;
-    #doneTime;
-
-    constructor(title, createTime) {
-        this.#title = title;
-        this.#finished = false;
-        this.#createTime = createTime;
-        this.#updateTime = null;
-        this.#doneTime = null;
-    }
-
-    getTitle() {
-        return this.#title;
-    }
-
-    getFinished() {
-        return this.#finished;
-    }
-
-    getCreateTime() {
-        return this.#createTime;
-    }
-
-    getUpdateTime() {
-        return this.#updateTime;
-    }
-
-    getDoneTime() {
-        return this.#doneTime;
-    }
-
-    setTitle(title) {
-        this.#title = title;
-        this.#updateTime = new Date();
-    }
-
-    setFinished() {
-        this.#finished = true;
-        this.#doneTime = new Date();
-    }
-
-    markFinished() {
-        this.#finished = true;
-        this.#doneTime = new Date();
-    }
-
-    updateTodo(newTitle) {
-        this.#title = newTitle;
-        this.#updateTime = new Date();
-    }
-}
-
-// Driver
 const form = document.getElementById("addForm");
 
 // Create two seperates Todo lists
@@ -193,20 +132,6 @@ function createTimestampSpan(className, initialText = "N/A") {
     return span;
 }
 
-function updateTodoListItem(li) {
-    const createTimeSpan = li.querySelector(".create-time");
-    createTimeSpan.textContent = formatDateTime(
-        new Date(li.todoData.getCreateTime())
-    );
-
-    if (li.todoData.finished) {
-        const doneTimeSpan = li.querySelector(".done-time");
-        doneTimeSpan.textContent = formatDateTime(
-            new Date(li.todoData.getDoneTime())
-        );
-    }
-}
-
 /**
  * Add a new Todo to the unfinished list
  * @param {Event} e - The event object
@@ -215,24 +140,20 @@ function addTodo(e) {
     e.preventDefault();
 
     // Get input values
-    const title = document.getElementById("todo").value;
+    const newTodo = document.getElementById("todo").value;
 
     // Check if the Todo is empty
-    if (!checkTodo(title)) {
+    if (!checkTodo(newTodo)) {
         textInput.value = "";
         return;
     }
 
-    const newTodo = new classTodo(title, new Date().toISOString());
-
     const li = document.createElement("li");
     li.className = "list-group-todo";
     li.setAttribute("draggable", "true");
-    // Store the Todo object in the DOM for future reference
-    li.todoData = newTodo;
 
     // Add text node with input value
-    li.appendChild(document.createTextNode(newTodo.getTitle()));
+    li.appendChild(document.createTextNode(newTodo));
 
     // Create updated time span (initially not displayed)
     const updatedTimeSpan = createTimestampSpan("badge-info updated-time");
@@ -241,7 +162,7 @@ function addTodo(e) {
     // Create creation time span
     const createTimeSpan = createTimestampSpan(
         "badge create-time",
-        formatDateTime(new Date(li.todoData.getCreateTime()))
+        formatDateTime(new Date())
     );
     li.appendChild(createTimeSpan);
 
@@ -251,20 +172,38 @@ function addTodo(e) {
 
     // Create finish buttons
     let finishBtn = document.createElement("button");
-    finishBtn.className = "btn btn-done float-right finish";
-    finishBtn.appendChild(document.createTextNode("done"));
-    li.appendChild(finishBtn);
 
     // Create delete buttons
     let deleteBtn = document.createElement("button");
-    deleteBtn.className = "btn btn-delete float-right delete";
-    deleteBtn.appendChild(document.createTextNode("X"));
-    li.appendChild(deleteBtn);
 
     // Create edit buttons
     let editBtn = document.createElement("button");
+
+    // Add classes to finish button
+    finishBtn.className = "btn btn-done float-right finish";
+
+    // Add classes to delete button
+    deleteBtn.className = "btn btn-delete float-right delete";
+
+    // Add classes to edit button
     editBtn.className = "btn btn-primary btn-sm float-left edit";
+
+    // Append finish text node
+    finishBtn.appendChild(document.createTextNode("done"));
+
+    // Append delete text node
+    deleteBtn.appendChild(document.createTextNode("X"));
+
+    // Append edit text node
     editBtn.appendChild(document.createTextNode("Edit"));
+
+    // Append finish button to li
+    li.appendChild(finishBtn);
+
+    // Append delete button to li
+    li.appendChild(deleteBtn);
+
+    // Append edit button to li
     li.appendChild(editBtn);
 
     // Append li to list
@@ -275,25 +214,6 @@ function addTodo(e) {
 
     // Clear input value
     textInput.value = "";
-}
-
-function saveTodos() {
-    const allTodos = Array.from(document.querySelectorAll("li")).map(
-        (li) => li.todoData
-    );
-    localStorage.setItem("todos", JSON.stringify(allTodos));
-}
-
-function loadTodos() {
-    const todos = JSON.parse(localStorage.getItem("todos"));
-    todos.forEach((todoData) => {
-        const li = createTodoListItem(todoData);
-        if (todoData.finished) {
-            finishedList.appendChild(li);
-        } else {
-            unfinishedList.appendChild(li);
-        }
-    });
 }
 
 /**
@@ -369,16 +289,9 @@ function saveChanges(li, newText, originalText) {
     console.log("new text: ", newText);
 
     if (newText && newText !== originalText && !checkTodo(newText)) {
-        // Update the todoData object
-        li.todoData.updateTodo(newText);
-
         // If not changed or input invalid, revert to old text
         let textNode = document.createTextNode(originalText);
         li.querySelector("div").replaceWith(textNode); // Replace the entire container
-
-        // Update the updated time
-        let updatedTimeSpan = li.querySelector(".updated-time");
-        updatedTimeSpan.textContent = formatDateTime(new Date());
 
         // Check if the newText is valid and different from the original input
     } else {
@@ -402,11 +315,8 @@ function finishTodo(e) {
     if (e.target.classList.contains("finish")) {
         let li = e.target.parentElement;
 
-        if (!li.todoData.getFinished()) {
+        if (!li.classList.contains("finished")) {
             let li = e.target.parentElement;
-            li.todoData.markFinished();
-
-            // Update class to indicate finished
             li.classList.add("finished");
 
             let finishBtn = e.target;
@@ -418,9 +328,7 @@ function finishTodo(e) {
 
             // Find the done time badge and update it
             let doneTimeSpan = li.querySelector(".done-time");
-            doneTimeSpan.textContent = formatDateTime(
-                new Date(li.todoData.getDoneTime())
-            );
+            doneTimeSpan.textContent = formatDateTime(new Date());
             doneTimeSpan.parentNode.insertBefore(
                 undoBtn,
                 doneTimeSpan.nextSibling
@@ -653,4 +561,19 @@ function handleDrop(e) {
     }
 
     return false;
+}
+
+/**
+ * TODO: resolve this part
+ */
+function createCategory() {
+    /**
+     * @type {import('./main.js').Category}
+     */
+    const newCategory = {
+        id: 0,
+        title: "new category",
+    };
+
+    // TODO: what to do?
 }
